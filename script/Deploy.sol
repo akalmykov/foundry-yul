@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.15;
+pragma solidity ^0.8.15;
 
-import "forge-std/Test.sol";
+import {Script, console2} from "forge-std/Script.sol";
 
-contract YulDeployer is Test {
-    ///@param fileName - The file name of the Yul contract. For example, the file name for "Example.yul" is "Example"
+contract Deploy is Script {
     function compile(string memory fileName) public returns (bytes memory bytecode) {
         string memory bashCommand = string.concat(
             'cast abi-encode "f(bytes)" $(solc --yul yul/', string.concat(fileName, ".yul --bin | tail -1)")
@@ -35,5 +34,12 @@ contract YulDeployer is Test {
 
         ///@notice return the address that the contract was deployed to
         return deployedAddress;
+    }
+
+    function run() public {
+        bytes memory bytecode = compile("Example");
+        vm.broadcast();
+        address addr = deployContract(bytecode);
+        console2.logAddress(addr);
     }
 }
