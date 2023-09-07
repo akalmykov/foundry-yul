@@ -12,7 +12,8 @@ contract ExampleTest is Test {
     Example exampleContract;
 
     function setUp() public {
-        exampleContract = Example(yulDeployer.deployContract("Example"));
+        bytes memory bytecode = yulDeployer.compile("Example");
+        exampleContract = Example(yulDeployer.deployContract(bytecode));
     }
 
     function testExample() public {
